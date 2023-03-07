@@ -1,23 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-
-const useDidMountEffect = (func, deps) => {
-  const didMount = useRef(false);
-  useEffect(() => {
-    if (didMount.current) {
-      func();
-    } else {
-      didMount.current = true;
-    }
-  }, deps);
-};
-
+import DailyCard from './DailyCard';
 
 function App() {
   const userInput = useRef(0);
   const [count, setCount] = useState(0)
   const [city, setCity] = useState("London")
   const [latLong, setLatLong] = useState([0,0])
-  const [temperatures, setTemperatures] = useState([])
+  const [maxTemperatures, setMaxTemperatures] = useState([])
+  const [minTemperatures, setMinTemperatures] = useState([])
+  const [precipitationProbabilities, setPrecipitationProbabilities] = useState([])
+  const [dailyCards, setDailyCards] = useState([])
   
   const clickHandler =(e)=>{
     setCity(userInput.current.value)
@@ -25,7 +17,6 @@ function App() {
     console.log(city,'inclickhandler')
   }
   
-   
 
   
   useEffect(()=>{
@@ -41,19 +32,50 @@ function App() {
     .then((data) => setLatLong([data[0]['lat'],data[0]['lon']]))
    }
    console.log(latLong)
-   const latlongURL = `https://api.open-meteo.com/v1/forecast?latitude=${latLong[0]}&longitude=${latLong[1]}&hourly=temperature_2m`;
+   const latlongURL = `https://api.open-meteo.com/v1/forecast?latitude=${latLong[0]}&longitude=${latLong[1]}&timezone=auto&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max`;
    fetch(latlongURL)
    .then((response) => response.json())
-   .then((data) => { let temperatures = data['hourly']['temperature_2m'].map((e)=>
-   {
-    return <p>{e}</p>
-   }
-   );
-    setTemperatures(temperatures)
-    console.log(city,temperatures)
-  })
-   },[count])
+   .then((data) => {
+    let dailyData = [
+      {
+        'maxTemp': 0,
+        'minTemp' : 0,
+        'rainProb' : 0
+      },
+      {
+        'maxTemp': 0,
+        'minTemp' : 0,
+        'rainProb' : 0
+      },
+      {
+        'maxTemp': 0,
+        'minTemp' : 0,
+        'rainProb' : 0
+      }
+    ]
 
+    let maxDailyTemps = data['daily']['temperature_2m_max'];
+    maxDailyTemps.slice(0,3).forEach((element, index) => {
+      dailyData[index]['maxTemp'] = element
+    });
+    let minDailyTemps = data['daily']['temperature_2m_min'];
+    minDailyTemps.slice(0,3).forEach((element, index) => {
+      dailyData[index]['minTemp'] = element
+    });
+    let precipitationProbs = data['daily']['precipitation_probability_max']
+    precipitationProbs.slice(0,3).forEach((element, index) => {
+      dailyData[index]['rainProb'] = element
+    });
+    console.log(dailyData)
+    let dailyCardArray = dailyData.map((e)=>{
+       return <DailyCard maxTemperature={e['maxTemp']} minTemperature={e['minTemp']} rainProb={e['rainProb']}/>
+    })
+    setDailyCards(dailyCardArray)
+    });
+   }
+   
+   ,[count])
+ 
 
 
   
@@ -64,8 +86,8 @@ function App() {
       <h2>Weather App</h2>
       <input className='border-green-400 border-1'  type='text' ref={userInput} onClick={clickHandler}/>
       <button >Check weather</button>
-      <div>
-         {temperatures}
+      <div className='border-green-400 border-1'>
+         {dailyCards}
       </div>
     </div>
   )
