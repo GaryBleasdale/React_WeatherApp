@@ -1,9 +1,9 @@
 export default function DailyCard(props){
     return (
-    <>
-        <h1>{props.maxTemperature}</h1>
-        <h1>{props.minTemperature}</h1>
-        <h1>{props.rainProb}</h1>
-    </>
+    <div className='dailyCard'>
+        <h1>MAX: {props.maxTemperature}C</h1>
+        <h1>MIN: {props.minTemperature}C</h1>
+        <h1>Chance of Rain: {props.rainProb}%</h1>
+    </div>
     )
 }

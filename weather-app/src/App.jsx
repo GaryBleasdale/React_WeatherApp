@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import DailyCard from './DailyCard';
+import './index.css'
 
 function App() {
   const userInput = useRef(0);
@@ -82,11 +83,11 @@ function App() {
   
 
   return (
-    <div className="App">
+    <div>
       <h2>Weather App</h2>
-      <input className='border-green-400 border-1'  type='text' ref={userInput} onClick={clickHandler}/>
+      <input type='text' ref={userInput} onClick={clickHandler}/>
       <button >Check weather</button>
-      <div className='border-green-400 border-1'>
+      <div className='cardContainer'>
          {dailyCards}
       </div>
     </div>
