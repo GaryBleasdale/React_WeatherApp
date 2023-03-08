@@ -66,7 +66,7 @@ function App() {
     }
     , [city])
 
-
+    let capitalizedCity = city.toUpperCase()
 
 
 
@@ -76,7 +76,7 @@ function App() {
       <h2>Weather App</h2>
       <input type='text' ref={userInput} />
       <button onClick={clickHandler}>Check weather</button>
-      <div>Weather for {city}</div>
+      <div>Weather for {capitalizedCity}</div>
       <div className='cardContainer'>
         {dailyCards}
 
