@@ -1,11 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
 import DailyCard from './DailyCard';
 import './index.css'
+import mapboxgl from 'mapbox-gl'
+import logo from './assets/3dayforecast_logo.png'
+
+
 
 function App() {
   const userInput = useRef(0);
   const [city, setCity] = useState()
   const [dailyCards, setDailyCards] = useState([])
+
+  const mapContainer = useRef(null);
+  const map = useRef(null);
+  const [mapBox, setMap] = useState(null);
+
 
 
   const clickHandler = () => {
@@ -61,26 +70,43 @@ function App() {
               })
               setDailyCards(dailyCardArray)
             });
+            if (map.current) {
+              map.current.remove()
+            } 
+            map.current = new mapboxgl.Map({
+            container: mapContainer.current,
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [lon, lat],
+            zoom: 8
+            });
+            setMap(map.current)
+            return ()=>{
+              if (map) {
+                map.remove()
+              }
+            }
         })
     }
     }
     , [city])
 
-    let capitalizedCity = city.toUpperCase()
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZ2FyeWJsZWFzZGFsZSIsImEiOiJjbGYxYWMwOXowNmczM3RycXN3bXZuY2k0In0._W6JxpLLdLGoW2vLsaFtiQ';
 
 
 
 
   return (
-    <div>
-      <h2>Weather App</h2>
-      <input type='text' ref={userInput} />
-      <button onClick={clickHandler}>Check weather</button>
-      <div>Weather for {capitalizedCity}</div>
+    <div className="container">
+      <img src={logo} className="App-logo" alt="logo" />
+      <div className="form-group">
+        <input type='text' ref={userInput} className="form-control" placeholder="Enter a city name"/>
+        <button onClick={clickHandler} className="btn btn-primary">Check weather</button>
+      </div>
+      { city && <div className="city-name">Showing weather for <strong classList='city-name'>{city}</strong></div>}
       <div className='cardContainer'>
         {dailyCards}
-
       </div>
+      <div ref={mapContainer} className="map-container" />
     </div>
   )
 }
