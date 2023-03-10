@@ -75,33 +75,42 @@
     .cardContainer {
       display:flex;
       flex-direction:column;
+
+     }
+
+    .card {
+      width: 70vw;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 16px;
+      background-color: white;
+      text-align: center;
+    }
   }
 
-  .card {
-    width: 100px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 16px;
-    background-color: white;
-    text-align: center;
-  }
+  @media only screen and (max-width: 420px){
+    .form-group{
+      display:flex;
+      flex-direction: column;
+    }
   }
 
-  .cardContainer {
-    display:flex;
-    flex-direction:row;
-}
+
 
 
 .dailyCard {
     display:flex;
     flex-direction: column;
-    margin: 0px 40px;
+    margin: 20px 40px;
     background-color: rgb(194, 176, 12);
     border-radius: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem;
     text-align: center;
+}
+
+.btn-primary{
+  margin-left: 15px;
 }
 
 .card-date {
@@ -168,6 +177,7 @@ svg{
   font-size: 24px;
   text-transform: capitalize;
   color:lightblue;
+  text-align: center;
 }
 
 .App-logo{
